@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import main.Game;
+import managers.CrocodileManager;
 import utilities.LoadSave;
 
 
@@ -23,12 +24,12 @@ public class Player extends Entity {
 	private float playerSpeed = 1f;
 
 	public int[][] lvlData;
-	// public BoxManager boxManager;
+	public CrocodileManager crocodileManager;
 	// public BushManager bushManger;
 
-	// public void setBoxManager(BoxManager boxManager) {
-	// 	// this.boxManager = boxManager;
-	// }
+	public void setCrocodileManager(CrocodileManager boxManager) {
+		this.crocodileManager = boxManager;
+	}
 
 	private float xDrawOffset = 26;
 	private float yDrawOffset = 18;
@@ -43,6 +44,13 @@ public class Player extends Entity {
 		updatePosition();
 		updateAnimationTick();
 		setAnimation();
+
+    boolean intersectCocodrile =  crocodileManager.intersectCocodrile(getHitBox());
+
+    if (intersectCocodrile) {
+      System.out.println("Intersecting");
+      reboot();
+    }
 	}
 
 	public void render(Graphics g) {
@@ -121,7 +129,7 @@ public class Player extends Entity {
 			moving = true;
 		}
 
-		boolean canMove = canMove(this, hitBox.x + xSpeed, hitBox.y + ySpeed);
+		boolean canMove = canMove(this, hitBox.x + xSpeed, hitBox.y + ySpeed, crocodileManager);
 		if (canMove) {
 			hitBox.x += xSpeed;
 			hitBox.y += ySpeed;
@@ -196,6 +204,11 @@ public class Player extends Entity {
 
 	public int getPlayerAction() {
 		return 0;
+	}
+
+	public void reboot() {
+		hitBox.x = Game.GAME_WIDTH / 2;
+		hitBox.y = Game.GAME_HEIGTH - Game.TILES_SIZE;
 	}
 
 	// public BoxManager getBoxManager() {

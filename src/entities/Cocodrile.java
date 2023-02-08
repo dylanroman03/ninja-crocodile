@@ -32,10 +32,17 @@ public class Cocodrile extends Entity {
   }
 
   public void render(Graphics g) {
-    g.drawImage(image, (int) getHitBox().x, (int) getHitBox().y, Game.TILES_SIZE, Game.TILES_SIZE, null);
+    g.drawImage(image, (int) hitBox.x, (int) hitBox.y, Game.TILES_SIZE, Game.TILES_SIZE, null);
 
     if (Game.DEBUG) {
       showHitBox(g);
+    }
+  }
+
+  public void update() {
+    hitBox.x -= 1;
+    if (hitBox.getMaxX() < 0) {
+      hitBox.x = Game.GAME_WIDTH;
     }
   }
 }

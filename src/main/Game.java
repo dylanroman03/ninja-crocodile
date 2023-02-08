@@ -3,7 +3,7 @@ package main;
 import java.awt.Graphics;
 
 import entities.Player;
-import managers.CocodrileManager;
+import managers.CrocodileManager;
 
 // import entities.Player;
 // import levels.BoxManager;
@@ -19,7 +19,7 @@ public class Game implements Runnable {
 	private boolean isGaming = true;
 
 	private Player player;
-	private CocodrileManager globeManager;
+	private CrocodileManager cocodrileManager;
 	// private LevelManager levelManager;
   // private BoxManager boxManager;
   // private BushManager bushManager;
@@ -31,7 +31,7 @@ public class Game implements Runnable {
 	public final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
 	public final static int GAME_WIDTH = TILES_SIZE * TILES_WIDTH;
 	public final static int GAME_HEIGTH = TILES_SIZE * TILES_HEIGTH;
-	public final static boolean DEBUG = false;
+	public final static boolean DEBUG = true;
 
 	public Game() {
 		initClasses();
@@ -46,8 +46,8 @@ public class Game implements Runnable {
 	private void initClasses() {
 		// levelManager = new LevelManager();
 		// int[][] matrix = levelManager.getLvlData();
-		int xInit = 0;
-		int yInit = 0;
+		int xInit = Game.GAME_WIDTH / 2;
+		int yInit = Game.GAME_HEIGTH - Game.TILES_SIZE;
 
 		// for (int i = 0; i < matrix.length; i++) {
 		// 	for (int j = 0; j < matrix[0].length; j++) {
@@ -58,11 +58,11 @@ public class Game implements Runnable {
 		// 	}
 		// }
 
-		globeManager = new CocodrileManager();
+		cocodrileManager = new CrocodileManager();
     // boxManager = new BoxManager(matrix);
 		player = new Player(xInit, yInit, TILES_SIZE + 30, TILES_SIZE + 30);
 		// player.setLvlData(matrix);
-		// player.setBoxManager(boxManager);
+		player.setCrocodileManager(cocodrileManager);
 		// player.setBushManager(bushManager);
 	}
 
@@ -73,14 +73,14 @@ public class Game implements Runnable {
 
 	public void update() {
 		player.update();
-		// boxManager.update();
+		cocodrileManager.update();
 	}
 
 	public void render(Graphics g) {
 		// levelManager.render(g);
 		// bushManager.render(g);
     // boxManager.render(g);
-		globeManager.render(g);
+		cocodrileManager.render(g);
 		player.render(g);
 	}
 
