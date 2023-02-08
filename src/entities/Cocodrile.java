@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import main.Game;
 import utilities.LoadSave;
 
-public class Globe extends Entity {
+public class Cocodrile extends Entity {
   public int type;
   private BufferedImage image;
   public boolean visible = true;
@@ -18,7 +18,7 @@ public class Globe extends Entity {
     return type;
   }
 
-  public Globe(float x, float y, int type) {
+  public Cocodrile(float x, float y, int type) {
     super(x, y, Game.TILES_SIZE, Game.TILES_SIZE);
     this.type = type;
 

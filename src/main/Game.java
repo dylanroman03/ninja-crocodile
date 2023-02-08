@@ -3,6 +3,7 @@ package main;
 import java.awt.Graphics;
 
 import entities.Player;
+import managers.CocodrileManager;
 
 // import entities.Player;
 // import levels.BoxManager;
@@ -18,6 +19,7 @@ public class Game implements Runnable {
 	private boolean isGaming = true;
 
 	private Player player;
+	private CocodrileManager globeManager;
 	// private LevelManager levelManager;
   // private BoxManager boxManager;
   // private BushManager bushManager;
@@ -56,7 +58,7 @@ public class Game implements Runnable {
 		// 	}
 		// }
 
-    // bushManager= new BushManager(matrix);
+		globeManager = new CocodrileManager();
     // boxManager = new BoxManager(matrix);
 		player = new Player(xInit, yInit, TILES_SIZE + 30, TILES_SIZE + 30);
 		// player.setLvlData(matrix);
@@ -78,6 +80,7 @@ public class Game implements Runnable {
 		// levelManager.render(g);
 		// bushManager.render(g);
     // boxManager.render(g);
+		globeManager.render(g);
 		player.render(g);
 	}
 
