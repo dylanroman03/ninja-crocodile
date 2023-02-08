@@ -5,6 +5,7 @@ import static utilities.Constants.PlayerConstants.IDLE_DOWN;
 import static utilities.Constants.PlayerConstants.IDLE_UP;
 import static utilities.Constants.PlayerConstants.RUNNING_LEFT;
 import static utilities.Constants.PlayerConstants.RUNNING_RIGHT;
+import static utilities.Helpers.canMove;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -120,11 +121,11 @@ public class Player extends Entity {
 			moving = true;
 		}
 
-		// boolean canMove = canMove(this, hitBox.x + xSpeed, hitBox.y + ySpeed);
-		// if (canMove) {
+		boolean canMove = canMove(this, hitBox.x + xSpeed, hitBox.y + ySpeed);
+		if (canMove) {
 			hitBox.x += xSpeed;
 			hitBox.y += ySpeed;
-		// }
+		}
 	}
 
 	private void loadAnimations() {
@@ -191,6 +192,10 @@ public class Player extends Entity {
 
 	public void setLvlData(int[][] lvlDate) {
 		this.lvlData = lvlDate;
+	}
+
+	public int getPlayerAction() {
+		return 0;
 	}
 
 	// public BoxManager getBoxManager() {
