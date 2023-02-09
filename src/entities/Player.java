@@ -1,6 +1,6 @@
 package entities;
 
-import static utilities.Constants.PATH_WARRIOR_LIST;
+import static utilities.Constants.PATH_WARRIOR;
 import static utilities.Constants.PlayerConstants.IDLE_DOWN;
 import static utilities.Constants.PlayerConstants.IDLE_UP;
 import static utilities.Constants.PlayerConstants.RUNNING_LEFT;
@@ -14,19 +14,14 @@ import main.Game;
 import managers.CrocodileManager;
 import utilities.LoadSave;
 
-
 public class Player extends Entity {
-	private BufferedImage[][] animations;
-	private int aniTick;
-	private int aniIndex;
-	private int aniSpeed = 10;
+	private BufferedImage image;
 	private int playerAction = IDLE_UP;
-	private boolean moving = false;
 	private boolean left;
 	private boolean up;
 	private boolean right;
 	private boolean down;
-	private float playerSpeed = 2f;
+	private float playerSpeed = 2.5f;
 
 	private CrocodileManager crocodileManager;
 	public Game game;
@@ -50,18 +45,17 @@ public class Player extends Entity {
 
 	public void update() {
 		updatePosition();
-		updateAnimationTick();
-		setAnimation();
+		setMoving();
 
-    boolean intersectCocodrile =  crocodileManager.intersectCocodrile(getHitBox());
+		boolean intersectCocodrile = crocodileManager.intersectCocodrile(getHitBox());
 
-    if (intersectCocodrile) {
-      reboot();
-    }
+		if (intersectCocodrile) {
+			reboot();
+		}
 	}
 
 	public void render(Graphics g) {
-		g.drawImage(animations[playerAction][aniIndex], (int) (hitBox.x - xDrawOffset), (int) (hitBox.y - yDrawOffset),
+		g.drawImage(image, (int) (hitBox.x - xDrawOffset), (int) (hitBox.y - yDrawOffset),
 				width, height, null);
 
 		if (Game.DEBUG) {
@@ -69,51 +63,19 @@ public class Player extends Entity {
 		}
 	}
 
-	private void updateAnimationTick() {
-		if (moving) {
-			aniTick++;
-			if (aniTick >= aniSpeed) {
-				aniTick = 0;
-				aniIndex++;
-				if (aniIndex >= 14) {
-					aniIndex = 0;
-				}
-
-			}
-		} else {
-			aniIndex = 0;
-		}
-	}
-
-	private void setAnimation() {
-		int startAni = playerAction;
-
-		if (moving) {
-			if (left)
-				playerAction = RUNNING_LEFT;
-			else if (right)
-				playerAction = RUNNING_RIGHT;
-			else if (down) {
-				playerAction = IDLE_DOWN;
-			} else {
-				playerAction = IDLE_UP;
-			}
-
+	private void setMoving() {
+		if (left)
+			playerAction = RUNNING_LEFT;
+		else if (right)
+			playerAction = RUNNING_RIGHT;
+		else if (down) {
+			playerAction = IDLE_DOWN;
 		} else {
 			playerAction = IDLE_UP;
 		}
-
-		if (startAni != playerAction)
-			resetAniTick();
-	}
-
-	private void resetAniTick() {
-		aniTick = 0;
-		aniIndex = 0;
 	}
 
 	private void updatePosition() {
-		moving = false;
 
 		if (!left && !right && !up && !down)
 			return;
@@ -123,18 +85,14 @@ public class Player extends Entity {
 
 		if (left && !right) {
 			xSpeed = -playerSpeed;
-			moving = true;
 		} else if (right && !left) {
 			xSpeed = playerSpeed;
-			moving = true;
 		}
 
 		if (up && !down) {
 			ySpeed = -playerSpeed;
-			moving = true;
 		} else if (down && !up) {
 			ySpeed = playerSpeed;
-			moving = true;
 		}
 
 		boolean canMove = canMove(this, hitBox.x + xSpeed, hitBox.y + ySpeed);
@@ -145,40 +103,22 @@ public class Player extends Entity {
 	}
 
 	private void loadAnimations() {
-		animations = new BufferedImage[4][14];
-
-		for (int j = 0; j < animations.length; j++) {
-			for (int i = 0; i < animations[j].length; i++) {
-				String index = "0";
-
-				if (i < 10) {
-					index += index + i;
-				} else {
-					index += i;
-				}
-
-				animations[j][i] = LoadSave.getImage(PATH_WARRIOR_LIST[j] + "Run/0_Warrior_Run_" + index + ".png");
-			}
-		}
+		image = LoadSave.getImage(PATH_WARRIOR);
 	}
 
 	public void setLeft(boolean left) {
 		this.left = left;
-		this.up = this.down = false;
 	}
 
 	public void setUp(boolean up) {
-		left = right = false;
 		this.up = up;
 	}
 
 	public void setRight(boolean right) {
-		up = down = false;
 		this.right = right;
 	}
 
 	public void setDown(boolean down) {
-		left = right = false;
 		this.down = down;
 	}
 
@@ -191,8 +131,7 @@ public class Player extends Entity {
 		hitBox.y = Game.GAME_HEIGTH - Game.TILES_SIZE;
 	}
 
-  public void win() {
-		game.callDialog(true);	
-  }
+	public void win() {
+		game.callDialog(true);
+	}
 }
-
