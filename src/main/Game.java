@@ -1,6 +1,8 @@
 package main;
 
 import java.awt.Graphics;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import entities.Player;
 import managers.CrocodileManager;
@@ -17,6 +19,8 @@ public class Game implements Runnable {
 	private final int FPS_SET = 120;
 	private final int UPS_SET = 200;
 	private boolean isGaming = true;
+	private int time = 0;
+	private boolean isPlaying = true;
 
 	private Player player;
 	private CrocodileManager cocodrileManager;
@@ -44,26 +48,28 @@ public class Game implements Runnable {
 	}
 
 	private void initClasses() {
-		// levelManager = new LevelManager();
-		// int[][] matrix = levelManager.getLvlData();
 		int xInit = Game.GAME_WIDTH / 2;
 		int yInit = Game.GAME_HEIGTH - Game.TILES_SIZE;
 
-		// for (int i = 0; i < matrix.length; i++) {
-		// 	for (int j = 0; j < matrix[0].length; j++) {
-		// 		if (matrix[i][j] == 5) {
-		// 			xInit = (Game.TILES_SIZE * j);
-		// 			yInit = (Game.TILES_SIZE * i);
-		// 		}
-		// 	}
-		// }
-
 		cocodrileManager = new CrocodileManager();
-    // boxManager = new BoxManager(matrix);
 		player = new Player(xInit, yInit, TILES_SIZE + 30, TILES_SIZE + 30);
-		// player.setLvlData(matrix);
 		player.setCrocodileManager(cocodrileManager);
-		// player.setBushManager(bushManager);
+
+		time = 0;
+		Timer timer = new Timer();
+		TimerTask task = new TimerTask() {
+
+			@Override
+			public void run() {
+				isPlaying = false;
+				callDialog(false);
+			}
+		};
+		timer.schedule(task, 5000);
+	}
+
+	protected void callDialog(boolean win) {
+		new Dialog(gamePanel, this, win);
 	}
 
 	private void startGameLoop() {
@@ -113,7 +119,10 @@ public class Game implements Runnable {
 			}
 
 			if (deltaF >= 1) {
-				gamePanel.repaint();
+				if (isPlaying) {
+					gamePanel.repaint();
+				}
+
 				frames++;
 				deltaF--;
 			}
@@ -126,7 +135,11 @@ public class Game implements Runnable {
 
 			}
 		}
+	}
 
+	public void playAgain() {
+		initClasses();
+		isPlaying = true;
 	}
 
 	// public void windowsFocusLost() {
