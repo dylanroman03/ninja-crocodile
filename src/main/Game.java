@@ -1,47 +1,43 @@
 package main;
 
+import static managers.StatusManager.renderTime;
+import static utilities.Constants.BACKGROUND_PATH;
+
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import entities.Player;
 import managers.CrocodileManager;
+import utilities.LoadSave;
 
-// import entities.Player;
-// import levels.BoxManager;
-// import levels.BushManager;
-// import levels.LevelManager;
 
-public class Game implements Runnable {
-	private GameWindow gameWindow;
+public class Game {
 	private GamePanel gamePanel;
-	private Thread gameThread;
-	private final int FPS_SET = 120;
-	private final int UPS_SET = 200;
 	private boolean isGaming = true;
 	private int time = 0;
 	private boolean isPlaying = true;
+	private BufferedImage background;
 
 	private Player player;
 	private CrocodileManager cocodrileManager;
-	// private LevelManager levelManager;
-  // private BoxManager boxManager;
-  // private BushManager bushManager;
 
-	public final static int TILES_DEFAULT_SIZE = 17;
-	public final static float SCALE = 3f;
-	public final static int TILES_WIDTH = 15;
-	public final static int TILES_HEIGTH = 15;
-	public final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
-	public final static int GAME_WIDTH = TILES_SIZE * TILES_WIDTH;
-	public final static int GAME_HEIGTH = TILES_SIZE * TILES_HEIGTH;
-	public final static boolean DEBUG = true;
+	public static final int TILES_DEFAULT_SIZE = 17;
+	public static final float SCALE = 3f;
+	public static final int TILES_WIDTH = 15;
+	public static final int TILES_HEIGTH = 15;
+	public static final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
+	public static final int GAME_WIDTH = TILES_SIZE * TILES_WIDTH;
+	public static final int GAME_HEIGTH = TILES_SIZE * TILES_HEIGTH;
+	public static final boolean DEBUG = true;
 
 	public Game() {
+		background = LoadSave.getImage(BACKGROUND_PATH);
 		initClasses();
 
 		gamePanel = new GamePanel(this);
-		gameWindow = new GameWindow(gamePanel);
+		new GameWindow(gamePanel);
 		gamePanel.requestFocus();
 
 		startGameLoop();
@@ -54,27 +50,30 @@ public class Game implements Runnable {
 		cocodrileManager = new CrocodileManager();
 		player = new Player(xInit, yInit, TILES_SIZE + 30, TILES_SIZE + 30);
 		player.setCrocodileManager(cocodrileManager);
+		player.setGame(this);
 
-		time = 0;
+		int timeout = DEBUG ? 15000 : 120000;
+		time = timeout / 1000;
 		Timer timer = new Timer();
 		TimerTask task = new TimerTask() {
 
 			@Override
 			public void run() {
-				isPlaying = false;
 				callDialog(false);
 			}
 		};
-		timer.schedule(task, 5000);
+		timer.schedule(task, timeout);
 	}
 
-	protected void callDialog(boolean win) {
+	public void callDialog(boolean win) {
+		isPlaying = false;
 		new Dialog(gamePanel, this, win);
 	}
 
 	private void startGameLoop() {
-		gameThread = new Thread(this);
-		gameThread.start();
+		while (isGaming) {
+			run();	
+		}
 	}
 
 	public void update() {
@@ -83,23 +82,20 @@ public class Game implements Runnable {
 	}
 
 	public void render(Graphics g) {
-		// levelManager.render(g);
-		// bushManager.render(g);
-    // boxManager.render(g);
+    g.drawImage(background, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGTH, null);
 		cocodrileManager.render(g);
 		player.render(g);
+		renderTime(g, time);
 	}
 
-	@Override
 	public void run() {
 
-		double timePerFrame = 1000000000.0 / FPS_SET;
-		double timePerUpdate = 1000000000.0 / UPS_SET;
+		/// Esto es para que halla 120 fps por segundo, de ese modo existe fluides en el juego
+		double timePerFrame = 1000000000.0 / 120;
+		double timePerUpdate = 1000000000.0 / 120;
 
 		long previousTime = System.nanoTime();
 
-		int frames = 0;
-		int updates = 0;
 		long lastCheck = System.currentTimeMillis();
 
 		double deltaU = 0;
@@ -114,7 +110,6 @@ public class Game implements Runnable {
 
 			if (deltaU >= 1) {
 				update();
-				updates++;
 				deltaU--;
 			}
 
@@ -123,16 +118,12 @@ public class Game implements Runnable {
 					gamePanel.repaint();
 				}
 
-				frames++;
 				deltaF--;
 			}
 
 			if (System.currentTimeMillis() - lastCheck >= 1000) {
 				lastCheck = System.currentTimeMillis();
-				System.out.println("FPS: " + frames + " | UPS: " + updates);
-				frames = 0;
-				updates = 0;
-
+				time--;
 			}
 		}
 	}
@@ -141,10 +132,6 @@ public class Game implements Runnable {
 		initClasses();
 		isPlaying = true;
 	}
-
-	// public void windowsFocusLost() {
-		// player.resetDirection();
-	// }
 
 	public Player getPlayer() {
 		return player;

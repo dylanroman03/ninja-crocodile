@@ -1,11 +1,7 @@
 package utilities;
 
 public class Constants {
-	public static class Directions {
-		public static final int LEFT = 0;
-		public static final int UP = 1;
-		public static final int RIGHT = 2;
-	}
+	private Constants() {}
 
 	public static class PlayerConstants {
 		public static final int IDLE_UP = 0;
@@ -22,14 +18,12 @@ public class Constants {
 			"res/Warrior_animations/Front/PNG Sequences/Warrior_clothes_1/"
 		};
 
-	public static final String PATH_BACKGROUND_LEVELS = "res/Background/marco.png";
-	public static final String PATH_BLOCK_LEVELS = "res/Background/block.png";
-	public static final String PATH_BOX_LEVELS = "res/Background/box.png";
-	public static final String PATH_FLOOR_LEVELS = "res/floor.png";
-	public static final String PATH_GOAL_LEVELS = "res/Background/goal.png";
-	public static final String PATH_FILE_LEVELS = "levels/";
-
 	public static final String PATH_COCODRILE = "res/cocodrile.png";
+	public static final String BACKGROUND_PATH = "res/background.png";
+
+	public static String getTimePath (int time) {
+		return "res/Time/" + time + ".png";
+	}
 
 }
 

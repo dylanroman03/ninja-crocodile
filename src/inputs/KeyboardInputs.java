@@ -15,7 +15,7 @@ public class KeyboardInputs implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
+		// Nothing here
 	}
 
 	@Override
@@ -31,7 +31,6 @@ public class KeyboardInputs implements KeyListener {
 				gamePanel.getGame().getPlayer().setDown(false);
 				break;
 			case KeyEvent.VK_D:
-				System.out.println("here");
 				gamePanel.getGame().getPlayer().setRight(false);
 				break;
 			default:

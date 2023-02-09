@@ -17,18 +17,26 @@ import utilities.LoadSave;
 
 public class Player extends Entity {
 	private BufferedImage[][] animations;
-	private int aniTick, aniIndex, aniSpeed = 10;
+	private int aniTick;
+	private int aniIndex;
+	private int aniSpeed = 10;
 	private int playerAction = IDLE_UP;
 	private boolean moving = false;
-	private boolean left, up, right, down;
-	private float playerSpeed = 1f;
+	private boolean left;
+	private boolean up;
+	private boolean right;
+	private boolean down;
+	private float playerSpeed = 2f;
 
-	public int[][] lvlData;
-	public CrocodileManager crocodileManager;
-	// public BushManager bushManger;
+	private CrocodileManager crocodileManager;
+	public Game game;
 
 	public void setCrocodileManager(CrocodileManager boxManager) {
 		this.crocodileManager = boxManager;
+	}
+
+	public void setGame(Game game) {
+		this.game = game;
 	}
 
 	private float xDrawOffset = 26;
@@ -48,7 +56,6 @@ public class Player extends Entity {
     boolean intersectCocodrile =  crocodileManager.intersectCocodrile(getHitBox());
 
     if (intersectCocodrile) {
-      System.out.println("Intersecting");
       reboot();
     }
 	}
@@ -111,7 +118,8 @@ public class Player extends Entity {
 		if (!left && !right && !up && !down)
 			return;
 
-		float xSpeed = 0, ySpeed = 0;
+		float xSpeed = 0;
+		float ySpeed = 0;
 
 		if (left && !right) {
 			xSpeed = -playerSpeed;
@@ -129,7 +137,7 @@ public class Player extends Entity {
 			moving = true;
 		}
 
-		boolean canMove = canMove(this, hitBox.x + xSpeed, hitBox.y + ySpeed, crocodileManager);
+		boolean canMove = canMove(this, hitBox.x + xSpeed, hitBox.y + ySpeed);
 		if (canMove) {
 			hitBox.x += xSpeed;
 			hitBox.y += ySpeed;
@@ -154,17 +162,9 @@ public class Player extends Entity {
 		}
 	}
 
-	public boolean isLeft() {
-		return left;
-	}
-
 	public void setLeft(boolean left) {
 		this.left = left;
 		this.up = this.down = false;
-	}
-
-	public boolean isUp() {
-		return up;
 	}
 
 	public void setUp(boolean up) {
@@ -172,17 +172,9 @@ public class Player extends Entity {
 		this.up = up;
 	}
 
-	public boolean isRight() {
-		return right;
-	}
-
 	public void setRight(boolean right) {
 		up = down = false;
 		this.right = right;
-	}
-
-	public boolean isDown() {
-		return down;
 	}
 
 	public void setDown(boolean down) {
@@ -190,37 +182,17 @@ public class Player extends Entity {
 		this.down = down;
 	}
 
-	public void resetDirection() {
-		left = false;
-		right = false;
-		down = false;
-		up = false;
-		moving = false;
-	}
-
-	public void setLvlData(int[][] lvlDate) {
-		this.lvlData = lvlDate;
-	}
-
 	public int getPlayerAction() {
-		return 0;
+		return playerAction;
 	}
 
-	public void reboot() {
+	private void reboot() {
 		hitBox.x = Game.GAME_WIDTH / 2;
 		hitBox.y = Game.GAME_HEIGTH - Game.TILES_SIZE;
 	}
 
-	// public BoxManager getBoxManager() {
-	// 	return boxManager;
-	// }
-
-	// public int getPlayerAction() {
-	// 	return playerAction;
-	// }
-
-  // public void setBushManager(BushManager bushManager) {
-	// 	this.bushManger = bushManager;
-  // }
+  public void win() {
+		game.callDialog(true);	
+  }
 }
 
