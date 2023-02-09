@@ -164,21 +164,17 @@ public class Player extends Entity {
 
 	public void setLeft(boolean left) {
 		this.left = left;
-		this.up = this.down = false;
 	}
 
 	public void setUp(boolean up) {
-		left = right = false;
 		this.up = up;
 	}
 
 	public void setRight(boolean right) {
-		up = down = false;
 		this.right = right;
 	}
 
 	public void setDown(boolean down) {
-		left = right = false;
 		this.down = down;
 	}
 
