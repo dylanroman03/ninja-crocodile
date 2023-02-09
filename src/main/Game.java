@@ -19,6 +19,7 @@ public class Game {
 	private int time = 0;
 	private boolean isPlaying = true;
 	private BufferedImage background;
+	private TimerTask task;
 
 	private Player player;
 	private CrocodileManager cocodrileManager;
@@ -55,7 +56,7 @@ public class Game {
 		int timeout = DEBUG ? 15000 : 120000;
 		time = timeout / 1000;
 		Timer timer = new Timer();
-		TimerTask task = new TimerTask() {
+		task = new TimerTask() {
 
 			@Override
 			public void run() {
@@ -67,6 +68,7 @@ public class Game {
 
 	public void callDialog(boolean win) {
 		isPlaying = false;
+		task.cancel();
 		new Dialog(gamePanel, this, win);
 	}
 
