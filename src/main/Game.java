@@ -31,7 +31,7 @@ public class Game {
 	public static final int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
 	public static final int GAME_WIDTH = TILES_SIZE * TILES_WIDTH;
 	public static final int GAME_HEIGTH = TILES_SIZE * TILES_HEIGTH;
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	public Game() {
 		background = LoadSave.getImage(BACKGROUND_PATH);
